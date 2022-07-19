@@ -56,8 +56,8 @@ const router = useRouter()
 const { query } = useRoute()
 
 const loginInfo = ref({
-  name: '',
-  password: '',
+  name: 'admin',
+  password: '123456',
 })
 
 initLoginInfo()

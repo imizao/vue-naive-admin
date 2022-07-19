@@ -1,6 +1,13 @@
 <template>
-  <n-layout has-sider h-full>
-    <n-layout-sider
+  <n-layout has-sider h-full style="background-color:#141820">
+    <AppMain
+          class="cur-scroll border-t bc-eee"
+          :style="{
+            height: `calc(100% - ${useTheme.tags.visible ? useTheme.tags.height ?? 50 : 0}px)`,
+            overflow: 'auto',
+          }"
+        />
+    <!-- <n-layout-sider
       bordered
       collapse-mode="width"
       :collapsed-width="64"
@@ -25,15 +32,15 @@
           }"
         />
       </n-layout>
-    </n-layout>
+    </n-layout> -->
   </n-layout>
 </template>
 
 <script setup>
-import AppHeader from './components/header/index.vue'
-import SideBar from './components/sidebar/index.vue'
-import AppMain from './components/AppMain.vue'
-import AppTags from './components/tags/index.vue'
+// import AppHeader from './components/header/index.vue'
+// import SideBar from './components/sidebar/index.vue'
+// import AppMain from './components/AppMain.vue'
+// import AppTags from './components/tags/index.vue'
 import { useThemeStore } from '@/store/modules/theme'
 import { useAppStore } from '@/store/modules/app'
 
