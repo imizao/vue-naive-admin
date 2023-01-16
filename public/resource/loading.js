@@ -14,7 +14,7 @@ function initSvgLogo(id) {
 
 function addThemeColorCssVars() {
 	const key = '__THEME_COLOR__'
-  const defaultColor = '#316c72';
+  const defaultColor = '#e2b870';
   const themeColor = window.localStorage.getItem(key) || defaultColor;
   const cssVars = `--primaryColor: ${themeColor}`;
   document.documentElement.style.cssText = cssVars;
