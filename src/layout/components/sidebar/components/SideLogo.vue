@@ -1,9 +1,9 @@
 <template>
   <router-link h-60 f-c-c to="/">
-    <icon-custom-logo text-36></icon-custom-logo>
+    <!-- <icon-custom-logo text-36></icon-custom-logo>
     <h2 v-show="!appStore.collapsed" ml-10 color-primary text-16 font-bold max-w-140 flex-shrink-0>
       {{ title }}
-    </h2>
+    </h2> -->
   </router-link>
 </template>
 
