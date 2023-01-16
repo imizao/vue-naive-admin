@@ -1,5 +1,5 @@
 import Layout from '@/layout/index.vue'
-import Home from '@/views/dashboard/index.vue'
+import Home from '@/views/dashboard/home.vue'
 
 export const basicRoutes = [
   {
@@ -37,7 +37,7 @@ export const basicRoutes = [
     component: Layout,
     redirect: '/home',
     meta: {
-      title: 'Dashboard',
+      title: '经营总览专题',
       icon: 'mdi:chart-bar',
     },
     children: [

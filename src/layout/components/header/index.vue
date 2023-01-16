@@ -1,12 +1,12 @@
 <template>
   <header px-15 h-full flex items-center>
     <div flex items-center>
-      <MenuCollapse />
-      <BreadCrumb ml-15 />
+      <!-- <MenuCollapse /> -->
+      <!-- <BreadCrumb ml-15 /> -->
     </div>
     <div ml-auto flex items-center>
-      <GithubSite />
-      <FullScreen />
+      <!-- <GithubSite />
+      <FullScreen /> -->
       <UserAvatar />
     </div>
   </header>
