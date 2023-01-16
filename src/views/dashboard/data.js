@@ -77,21 +77,130 @@ export const netProfitJson = {
             title: ''
         },
         {
-            key: 'revenuePlanYear',
+            key: 'profitPlanYear',
             title: '本年计划(亿元)'
         },
         {
-            key: 'revenue',
+            key: 'profit',
             title: '本月完成(亿元)'
         },
         {
-            key: 'revenueTotal',
+            key: 'profitTotal',
             title: '本年完成(亿元)'
         },
         {
-            key: 'revenueCompRateYear',
+            key: 'profitCompRateYear',
             title: '完成率'
         },
         
+    ],
+}
+
+// 资产负债1
+export const assetsAndLiabilitiesJson1 = {
+    name: '资产负债',
+    data: [
+        {
+            name: '含水业燃气',
+            value: 'assetsAndLiabilitiesWaterGas'
+        },
+        // {
+        //     name: '不含水业燃气',
+        //     value: 'assetsAndLiabilitiesNotWaterGas'
+        // },
+    ],
+    columns: [
+        {
+            key: 'name',
+            title: ''
+        },
+        {
+            key: 'totalAssetsQm',
+            title: '总资产'
+        },
+        {
+            key: 'netAssetsQm',
+            title: '净资产'
+        },
+        {
+            key: 'liabilitiesQm',
+            title: '负债'
+        },
+    ],
+}
+// 资产负债2
+export const assetsAndLiabilitiesJson2 = {
+    name: '资产负债',
+    data: [
+        // {
+        //     name: '含水业燃气',
+        //     value: 'assetsAndLiabilitiesWaterGas'
+        // },
+        {
+            name: '不含水业燃气',
+            value: 'assetsAndLiabilitiesNotWaterGas'
+        },
+    ],
+    columns: [
+        {
+            key: 'name',
+            title: ''
+        },
+        {
+            key: 'totalAssetsQm2',
+            title: '总资产'
+        },
+        {
+            key: 'netAssetsQm2',
+            title: '净资产'
+        },
+        {
+            key: 'liabilitiesQm2',
+            title: '负债'
+        },
+    ],
+}
+// 投资分析
+export const investmentAnalysisJson = {
+    name: '投资分析',
+    data: [
+        {
+            name: '总投资',
+            value: 'InvestmentAnalysisTotalInvestment'
+        },
+        {
+            name: '政投',
+            value: 'InvestmentAnalysisPoliticalInvestment'
+        },
+        {
+            name: '社投',
+            value: 'InvestmentAnalysisSocialInvestment'
+        },
+        {
+            name: '政拆投资',
+            value: 'InvestmentAnalysisZctz'
+        },
+        {
+            name: '股权及金融投资',
+            value: 'InvestmentAnalysisGqjjjtz'
+        },
+    ],
+    columns: [
+        {
+            key: 'name',
+            title: ''
+        },
+        {
+            key: 'totalAssetsQm',
+            title: '总资产'
+        },
+        {
+            key: 'netAssetsQc',
+            title: '净资产'
+        },
+        {
+            key: 'liabilitiesQc',
+            title: '负债'
+        },
     ],
 }

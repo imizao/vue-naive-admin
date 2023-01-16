@@ -15,18 +15,26 @@ export const integrationTable = (data, returndata) => {
         }
     });
     return table;
-    
+
 }
 
-export const decouplingTable = (data,statedata) => {
+export const decouplingTable = (data, statedata) => {
     let obj = {}
     data.data.forEach(item => {
         statedata.forEach(i => {
             if (i.baseName == item.name) {
-                obj[item.value] = {...i}
+                obj[item.value] = { ...i }
             }
         })
     })
-    // console.log(obj)
     return obj;
+    if (data.length == 1) {
+        let aData = data.data[0]
+        obj.key = aData.value
+        obj.value = statedata[0]
+        return obj;
+    } else {
+
+    }
+
 }

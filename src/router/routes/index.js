@@ -52,6 +52,52 @@ export const basicRoutes = [
       },
     ],
   },
+  {
+    name: 'Dashboard',
+    path: '/',
+    component: Layout,
+    meta: {
+      title: '项目管理专题',
+      // icon: 'mdi:chart-bar',
+    },
+  },
+  {
+    name: 'Dashboard',
+    path: '/',
+    component: Layout,
+    meta: {
+      title: '土地招商专题',
+      // icon: 'mdi:chart-bar',
+    },
+  },
+  {
+    name: 'Dashboard',
+    path: '/',
+    component: Layout,
+    meta: {
+      title: '资产运营专题',
+      // icon: 'mdi:chart-bar',
+    },
+  },
+  {
+    name: 'Dashboard',
+    path: '/',
+    component: Layout,
+    meta: {
+      title: '人力资源专题',
+      // icon: 'mdi:chart-bar',
+    },
+  },
+  {
+    name: 'Dashboard',
+    path: '/',
+    component: Layout,
+    meta: {
+      title: '应急管理专题',
+      // icon: 'mdi:chart-bar',
+    },
+  },
+  
 
   // {
   //   name: 'ErrorPage',

@@ -44,4 +44,11 @@ export const getDataList = (data) => {
     data,
   })
 }
+export const saveDataList = (data) => {
+  return request({
+    url: '/business/jyzlzt/jyzlAddUpdate',
+    method: 'post',
+    data,
+  })
+}
 

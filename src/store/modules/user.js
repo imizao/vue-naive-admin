@@ -31,7 +31,7 @@ export const useUserStore = defineStore('user', {
           code: 0,
           data: {
             id: 1,
-            name: '大脸怪(admin)',
+            name: '陈洁',
             avatar: 'https://assets.qszone.com/images/avatar.jpg',
             email: 'Ronnie@123.com',
             role: ['admin'],
