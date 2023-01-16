@@ -46,8 +46,8 @@ export const basicRoutes = [
         path: 'home',
         component: Home,
         meta: {
-          title: '首页',
-          icon: 'mdi:home',
+          title: '经营总览专题',
+          // icon: 'mdi:home',
         },
       },
     ],

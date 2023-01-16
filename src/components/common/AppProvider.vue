@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider wh-full :theme-overrides="themStore.naiveThemeOverrides">
+  <n-config-provider :locale="zhCN" wh-full :theme-overrides="themStore.naiveThemeOverrides">
     <n-loading-bar-provider>
       <n-dialog-provider>
         <n-notification-provider>
@@ -15,8 +15,8 @@
 
 <script setup>
 import { defineComponent, h } from 'vue'
-import { useLoadingBar, useDialog, useMessage, useNotification } from 'naive-ui'
-
+import { useLoadingBar, useDialog, useMessage } from 'naive-ui'
+import { zhCN } from 'naive-ui'
 import { useCssVar } from '@vueuse/core'
 import { useThemeStore } from '@/store/modules/theme'
 import { setupMessage, setupDialog } from '@/utils/common/naiveTools'
@@ -38,7 +38,7 @@ watch(
 // 挂载naive组件的方法至window, 以便在全局使用
 function setupNaiveTools() {
   window.$loadingBar = useLoadingBar()
-  window.$notification = useNotification()
+  // window.$notification = useNotification()
 
   window.$message = setupMessage(useMessage())
   window.$dialog = setupDialog(useDialog())
