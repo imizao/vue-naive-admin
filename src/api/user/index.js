@@ -36,3 +36,12 @@ export function saveUser(data = {}, id) {
     data,
   })
 }
+
+export const getDataList = (data) => {
+  return request({
+    url: '/business/jyzlzt/search',
+    method: 'post',
+    data,
+  })
+}
+

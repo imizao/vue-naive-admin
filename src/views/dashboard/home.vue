@@ -2,7 +2,13 @@
   <div p-24>
     <div flex class="flex-box">
       <div flex style="align-items: center">
-        你要修改的月份是：<n-date-picker v-model:value="timestamp" type="month" clearable />
+        你要修改的月份是：<n-date-picker
+          :value-format="state.timestamp"
+          type="month"
+          clearable
+          :on-confirm="(e) => getDataListFn(e)"
+          :is-date-disabled="disablePreviousDate"
+        />
       </div>
       <div flex>
         <n-button style="margin-right: 40px" type="primary" @click="handleCreate">保存</n-button>
@@ -11,24 +17,26 @@
     </div>
     <div class="header">营业收入</div>
     <n-data-table
-          mt-20
-          :loading="state.loading"
-          :scroll-x="1600"
-          :data="state.tableData"
-          :columns="operatingData()"
-          :row-key="(row) => row.id"
-        />
+      mt-20
+      :loading="state.loading"
+      :scroll-x="1600"
+      :data="state.tableData"
+      :columns="operatingData()"
+      :row-key="(row) => row.id"
+    />
   </div>
 </template>
 
 <script setup>
 import { reactive, onMounted } from 'vue'
 // import { usePostTable } from './usePostTable'
-import { NInput, NDataTable,NEl } from "naive-ui";
-import {returnData} from "./return"
-import {data} from "./data"
-import {integrationTable} from "./useTable"
-import { defAxios as request } from '@/utils/http'
+import { NInput, NDataTable, NEl } from 'naive-ui'
+import { returnData } from './return'
+import { data } from './data'
+import { integrationTable } from './useTable'
+import { getDataList } from '@/api/user'
+import dayjs from 'dayjs'
+import console from 'console'
 
 // const createData = () => [
 //   {
@@ -52,45 +60,65 @@ import { defAxios as request } from '@/utils/http'
 // ];
 const state = reactive({
   loading: false,
-  timestamp: new Date(),
+  timestamp: '',
   // tableData: createData(),
   tableData: [],
 })
 
 onMounted(() => {
-  let table = integrationTable(data,returnData)
-  state.tableData = table
-  operatingData()
+  init()
   // console.log(returnData)
   // console.log(data)
 })
+const getDataListFn =(e) => {
+  let time = {
+    yearsMonth: dayjs(e).format('YYYY-M')
+  }
+  state.timestamp = time.yearsMonth
+  debugger
+  getDataList(time).then((res) => {
+    let table = integrationTable(data, res.data)
+    state.tableData = table
+    operatingData()
+  })
+}
+const init = async () => {
+  let time = {
+    yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-M'),
+  }
+  state.timestamp = time.yearsMonth
 
+  let rData = await getDataList(time)
+
+  let table = integrationTable(data, rData.data)
+  state.tableData = table
+  operatingData()
+}
 const operatingData = () => {
- return data.columns.map(item => {
+  return data.columns.map((item) => {
     if (item.title == '') {
-     return {
-        title:'',
+      return {
+        title: '',
         render(row, index) {
           return h('span', {
-            innerHTML: row.baseName
+            innerHTML: row.baseName,
           })
-        }
+        },
       }
     }
     return {
-        title: item.title,
-        render(row, index) {
-          return h(NInput, {
-            value: row[item.key],
-            onUpdateValue(v) {
-              console.log(v)
-              state.tableData[index][item.key] = v;
-            }
-          });
-        }
-      }
+      title: item.title,
+      render(row, index) {
+        return h(NInput, {
+          value: row[item.key],
+          onUpdateValue: (v) => {
+            state.tableData[index][item.key] = Number(v);
+          },
+        })
+      },
+    }
   })
-  
+
   // let a = createColumns()
   // console.log(a)
 }
@@ -140,10 +168,14 @@ const operatingData = () => {
 //     ];
 
 function handleCreate() {
-  console.log(state.tableData)
+  let a = state.tableData
+  debugger
+  // console.log()
+  
 }
-
-
+function disablePreviousDate(ts) {
+  return ts > Date.now()
+}
 </script>
 
 <style lang="scss" scoped>
@@ -154,7 +186,7 @@ function handleCreate() {
   font-size: 16px;
   color: #333;
 }
-.header{
+.header {
   height: 30px;
   background-color: #76e3e3;
   margin: 10px 0 0;
