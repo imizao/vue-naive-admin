@@ -7,5 +7,7 @@
 </template>
 
 <script setup>
+import { setToken } from '@/utils/token'
 import AppProvider from '@/components/common/AppProvider.vue'
+setToken('admin')
 </script>

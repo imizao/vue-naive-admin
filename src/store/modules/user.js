@@ -26,7 +26,18 @@ export const useUserStore = defineStore('user', {
   actions: {
     async getUserInfo() {
       try {
-        const res = await getUser()
+        // const res = await getUser()
+        const res = {
+          code: 0,
+          data: {
+            id: 1,
+            name: '大脸怪(admin)',
+            avatar: 'https://assets.qszone.com/images/avatar.jpg',
+            email: 'Ronnie@123.com',
+            role: ['admin'],
+          }
+        }
+
         if (res.code === 0) {
           const { id, name, avatar, role } = res.data
           this.userInfo = { id, name, avatar, role }
