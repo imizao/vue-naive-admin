@@ -5,7 +5,6 @@ export const integrationTable = (data, returndata) => {
             baseName: item.name,
         }
         for (let key in returndata) {
-            // console.log(key)
             if (key == item.value) {
                 obj = {
                     ...obj,
@@ -13,17 +12,21 @@ export const integrationTable = (data, returndata) => {
                 }
                 table.push(obj)
             }
-            // console.log(`${key}: ${returndata[key]}`);
         }
-        
     });
-    // console.log(table)
     return table;
-    // console.log(data)
-    // console.log(returndata)
     
 }
 
-export const decouplingTable = () => {
-
+export const decouplingTable = (data,statedata) => {
+    let obj = {}
+    data.data.forEach(item => {
+        statedata.forEach(i => {
+            if (i.baseName == item.name) {
+                obj[item.value] = {...i}
+            }
+        })
+    })
+    // console.log(obj)
+    return obj;
 }

@@ -20,8 +20,17 @@
       mt-20
       :loading="state.loading"
       :scroll-x="1600"
-      :data="state.tableData"
-      :columns="operatingData()"
+      :data="state.operatingTableData"
+      :columns="operatingData(operatingJson, state.operatingTableData)"
+      :row-key="(row) => row.id"
+    />
+    <div class="header">净利润</div>
+    <n-data-table
+      mt-20
+      :loading="state.loading"
+      :scroll-x="1600"
+      :data="state.netProfitTableData"
+      :columns="operatingData(operatingJson, state.netProfitTableData)"
       :row-key="(row) => row.id"
     />
   </div>
@@ -29,72 +38,58 @@
 
 <script setup>
 import { reactive, onMounted } from 'vue'
-// import { usePostTable } from './usePostTable'
 import { NInput, NDataTable, NEl } from 'naive-ui'
-import { returnData } from './return'
-import { data } from './data'
-import { integrationTable } from './useTable'
+// import { returnData } from './return'
+import { operatingJson, netProfitJson } from './data'
+import { integrationTable, decouplingTable } from './useTable'
 import { getDataList } from '@/api/user'
 import dayjs from 'dayjs'
-import console from 'console'
 
-// const createData = () => [
-//   {
-//     key: 0,
-//     name: "John Brown",
-//     age: "32",
-//     address: "New York No. 1 Lake Park",
-//   },
-//   {
-//     key: 1,
-//     name: "Jim Green",
-//     age: "42",
-//     address: "London No. 1 Lake Park",
-//   },
-//   {
-//     key: 2,
-//     name: "Joe Black",
-//     age: "32",
-//     address: "Sidney No. 1 Lake Park",
-//   },
-// ];
 const state = reactive({
   loading: false,
   timestamp: '',
-  // tableData: createData(),
-  tableData: [],
+  operatingTableData: [],
+  netProfitTableData: [],
 })
 
 onMounted(() => {
   init()
-  // console.log(returnData)
-  // console.log(data)
 })
-const getDataListFn =(e) => {
+const getDataListFn = (e) => {
   let time = {
-    yearsMonth: dayjs(e).format('YYYY-M')
+    yearsMonth: dayjs(e).format('YYYY-M'),
   }
   state.timestamp = time.yearsMonth
-  debugger
   getDataList(time).then((res) => {
-    let table = integrationTable(data, res.data)
-    state.tableData = table
-    operatingData()
+    setAllData(res.data)
   })
 }
+
 const init = async () => {
   let time = {
     yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-M'),
   }
   state.timestamp = time.yearsMonth
-
-  let rData = await getDataList(time)
-
-  let table = integrationTable(data, rData.data)
-  state.tableData = table
-  operatingData()
+  let res = await getDataList(time)
+  setAllData(res.data)
 }
-const operatingData = () => {
+
+const setAllData = (data) => {
+  // 营收收入
+  {
+    let table = integrationTable(operatingJson, data)
+    state.operatingTableData = table
+    operatingData(operatingJson, state.operatingTableData)
+  }
+  // 净利润
+  {
+    let table = integrationTable(netProfitJson, data)
+    state.netProfitTableData = table
+    operatingData(netProfitJson, state.netProfitTableData)
+  }
+}
+
+const operatingData = (data, tableData) => {
   return data.columns.map((item) => {
     if (item.title == '') {
       return {
@@ -112,66 +107,18 @@ const operatingData = () => {
         return h(NInput, {
           value: row[item.key],
           onUpdateValue: (v) => {
-            state.tableData[index][item.key] = Number(v);
+            tableData[index][item.key] = Number(v)
           },
         })
       },
     }
   })
-
-  // let a = createColumns()
-  // console.log(a)
 }
 
-// const createColumns = () => [
-//       {
-//         title:'',
-//         render(row, index) {
-//           return h('span', {
-//             innerHTML: row.name
-//           })
-//         }
-//       },
-//       {
-//         title: "本年计划(亿元)",
-//         render(row, index) {
-//           return h(NInput, {
-//             value: row.name,
-//             onUpdateValue(v) {
-//               state.tableData[index].name = v;
-//             }
-//           });
-//         }
-//       },
-//       {
-//         title: "本月完成(亿元)",
-//         render(row, index) {
-//           return h(NInput, {
-//             value: row.age,
-//             onUpdateValue(v) {
-//               state.tableData[index].age = v;
-//             }
-//           });
-//         }
-//       },
-//       {
-//         title: "本年完成(亿元)",
-//         render(row, index) {
-//           return h(NInput, {
-//             value: row.address,
-//             onUpdateValue(v) {
-//               state.tableData[index].address = v;
-//             }
-//           });
-//         }
-//       }
-//     ];
-
 function handleCreate() {
-  let a = state.tableData
-  debugger
-  // console.log()
-  
+  decouplingTable(operatingJson, state.operatingTableData)
+  // let a = state.operatingTableData
+  // console.log(a)
 }
 function disablePreviousDate(ts) {
   return ts > Date.now()
