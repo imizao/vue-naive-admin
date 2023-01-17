@@ -1,7 +1,6 @@
 <template>
   <div p-24>
     <div flex class="flex-box">
-      <!-- :value-format="state.timestamp" -->
       <div flex style="align-items: center">
         你要修改的月份是：<n-date-picker
           v-model:value="timestamp"
@@ -51,8 +50,7 @@
 
 <script setup>
 import { reactive, onMounted,ref } from 'vue'
-import { NInput, NDataTable, NEl } from 'naive-ui'
-// import { returnData } from './return'
+import { NInput, NInputNumber,NDataTable } from 'naive-ui'
 import { operatingJson, netProfitJson, assetsAndLiabilitiesJson1, assetsAndLiabilitiesJson2 } from './data'
 import { integrationTable, decouplingTable } from './useTable'
 import { getDataList,saveDataList } from '@/api/user'
@@ -71,24 +69,23 @@ let timestamp = ref(null)
 onMounted(() => {
   init()
 })
+
+const init = async () => {
+  let time = {
+    yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-MM'),
+  }
+  timestamp.value = dayjs(time.yearsMonth).$d
+  let res = await getDataList(time)
+  setAllData(res.data)
+}
 const getDataListFn = (e) => {
   let time = {
-    yearsMonth: dayjs(e).format('YYYY-M'),
+    yearsMonth: dayjs(e).format('YYYY-MM'),
   }
   timestamp.value = dayjs(time.yearsMonth).$d
   getDataList(time).then((res) => {
     setAllData(res.data)
   })
-}
-
-const init = async () => {
-  let time = {
-    yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-M'),
-  }
-  // console.log(dayjs(time.yearsMonth))
-  timestamp.value = dayjs(time.yearsMonth).$d
-  let res = await getDataList(time)
-  setAllData(res.data)
 }
 
 const setAllData = (data) => {
@@ -133,7 +130,8 @@ const operatingData = (data, tableData) => {
     return {
       title: item.title,
       render(row, index) {
-        return h(NInput, {
+        return h(NInputNumber, {
+          showButton: false,
           value: row[item.key],
           style: 'width: 150px',
           onUpdateValue: (v) => {
@@ -151,20 +149,17 @@ const handleCreate = () => {
     ...decouplingTable(netProfitJson, state.netProfitTableData),
     ...decouplingTable(assetsAndLiabilitiesJson1, state.assetsAndLiabilitiesTableData1),
     ...decouplingTable(assetsAndLiabilitiesJson2, state.assetsAndLiabilitiesTableData2),
-    yearsMonth: dayjs(timestamp.value).format('YYYY-M')
+    yearsMonth: dayjs(timestamp.value).format('YYYY-MM')
   }
-  // console.log(obj)
-  // return 
   saveDataList(obj).then(res => {
     if (res.code == 0) {
       $message.success('保存成功')
     }
   })
-  // let a = state.operatingTableData
   console.log(obj)
 }
 function disablePreviousDate(ts) {
-  return ts > dayjs(dayjs().add(-1, 'month').startOf('month').format('YYYY-M')).$d
+  return ts > dayjs(dayjs().add(-1, 'month').startOf('month').format('YYYY-MM')).$d
 }
 </script>
 

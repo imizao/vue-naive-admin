@@ -3,6 +3,7 @@
     <div flex items-center>
       <!-- <MenuCollapse /> -->
       <!-- <BreadCrumb ml-15 /> -->
+      <div style="color:#e1b870">领导驾驶舱数据管理系统</div>
     </div>
     <div ml-auto flex items-center>
       <!-- <GithubSite />

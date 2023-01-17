@@ -37,7 +37,6 @@ export const useUserStore = defineStore('user', {
             role: ['admin'],
           }
         }
-
         if (res.code === 0) {
           const { id, name, avatar, role } = res.data
           this.userInfo = { id, name, avatar, role }

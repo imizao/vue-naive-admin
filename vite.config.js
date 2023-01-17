@@ -12,7 +12,6 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd())
   const viteEnv = wrapperEnv(env)
   const { VITE_PORT, VITE_PUBLIC_PATH, VITE_PROXY } = viteEnv
-
   return {
     root,
     base: VITE_PUBLIC_PATH || '/',
@@ -25,7 +24,7 @@ export default defineConfig(({ command, mode }) => {
     server: {
       host: '0.0.0.0',
       port: VITE_PORT,
-      proxy: createProxy(VITE_PROXY),
+      // proxy: createProxy(VITE_PROXY),
     },
     build: {
       target: 'es2015',

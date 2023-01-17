@@ -29,19 +29,23 @@ export const operatingJson = {
         },
         {
             key: 'revenuePlanYear',
-            title: '本年计划(亿元)'
+            title: '本年计划(元)'
         },
         {
             key: 'revenue',
-            title: '本月完成(亿元)'
+            title: '本月完成(元)'
         },
         {
             key: 'revenueTotal',
-            title: '本年完成(亿元)'
+            title: '本年完成(元)'
         },
         {
             key: 'revenueCompRateYear',
-            title: '完成率'
+            title: '完成率(%)'
+        },
+        {
+            key: 'revenueCompRateTb',
+            title: '同比增长(%)'
         },
         
     ],
@@ -78,19 +82,23 @@ export const netProfitJson = {
         },
         {
             key: 'profitPlanYear',
-            title: '本年计划(亿元)'
+            title: '本年计划(元)'
         },
         {
             key: 'profit',
-            title: '本月完成(亿元)'
+            title: '本月完成(元)'
         },
         {
             key: 'profitTotal',
-            title: '本年完成(亿元)'
+            title: '本年完成(元)'
         },
         {
             key: 'profitCompRateYear',
-            title: '完成率'
+            title: '完成率(%)'
+        },
+        {
+            key: 'profitCompRateTb',
+            title: '同比增长(%)'
         },
         
     ],
