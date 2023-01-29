@@ -158,13 +158,14 @@ const operatingData = (data, tableData) => {
     return {
       title: item.title,
       render(row, index) {
-        return h(item.title == '说明' ? NInput : NInputNumber, {
+        return h(item.key == 'description' ? NInput : NInputNumber, {
           showButton: false,
           value: row[item.key],
-          style: item.title == '说明' ?'width: auto':'width: 100px',
-          status: false ? 'warning' : 'success',
+          style: item.key == 'description' ?'width: auto':'width: 100px',
+          status: row[`${item.key}Status`] ? 'warning' : 'success',
           onUpdateValue: (v) => {
             tableData[index][item.key] = v
+            tableData[index][`${item.key}Status`] = true
           },
         })
       },

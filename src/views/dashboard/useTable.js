@@ -29,13 +29,4 @@ export const decouplingTable = (data, statedata) => {
         })
     })
     return obj;
-    if (data.length == 1) {
-        let aData = data.data[0]
-        obj.key = aData.value
-        obj.value = statedata[0]
-        return obj;
-    } else {
-
-    }
-
 }

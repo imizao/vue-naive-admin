@@ -1,6 +1,7 @@
 import Layout from '@/layout/index.vue'
 import Home from '@/views/dashboard/home.vue'
 import NonePage from '@/views/dashboard/none.vue'
+import ManagementAccountsIndex from '@/views/management-accounts/index.vue'
 
 export const basicRoutes = [
   {
@@ -38,7 +39,7 @@ export const basicRoutes = [
     component: Layout,
     redirect: '/home',
     meta: {
-      title: '经营总览专题',
+      title: '数据管理',
       icon: 'mdi:chart-bar',
     },
     children: [
@@ -47,74 +48,75 @@ export const basicRoutes = [
         path: 'home',
         component: Home,
         meta: {
-          title: '企业管理部',
+          title: '经营总览专题',
           // icon: 'mdi:home',
         },
       },
       {
         name: 'Home1',
-        path: 'caiwu',
+        path: 'home1',
         component: NonePage,
         meta: {
-          title: '财务部',
+          title: '项目管理专题',
           // icon: 'mdi:home',
         },
       },
       {
         name: 'Home2',
-        path: 'jrrj',
+        path: 'home2',
         component: NonePage,
         meta: {
-          title: '金融融资部',
+          title: '土地招商专题',
+          // icon: 'mdi:home',
+        },
+      },
+      {
+        name: 'Home3',
+        path: 'home3',
+        component: NonePage,
+        meta: {
+          title: '资产运营专题',
+          // icon: 'mdi:home',
+        },
+      },
+      {
+        name: 'Home4',
+        path: 'home4',
+        component: NonePage,
+        meta: {
+          title: '人力资源专题',
+          // icon: 'mdi:home',
+        },
+      },
+      {
+        name: 'Home5',
+        path: 'home5',
+        component: NonePage,
+        meta: {
+          title: '应急管理专题',
           // icon: 'mdi:home',
         },
       },
     ],
   },
   {
-    name: 'Dashboard',
+    name: 'Test',
     path: '/',
     component: Layout,
     meta: {
-      title: '项目管理专题',
-      // icon: 'mdi:chart-bar',
+      title: '管理记录',
+      icon: 'entypo:briefcase',
     },
-  },
-  {
-    name: 'Dashboard',
-    path: '/',
-    component: Layout,
-    meta: {
-      title: '土地招商专题',
-      // icon: 'mdi:chart-bar',
-    },
-  },
-  {
-    name: 'Dashboard',
-    path: '/',
-    component: Layout,
-    meta: {
-      title: '资产运营专题',
-      // icon: 'mdi:chart-bar',
-    },
-  },
-  {
-    name: 'Dashboard',
-    path: '/',
-    component: Layout,
-    meta: {
-      title: '人力资源专题',
-      // icon: 'mdi:chart-bar',
-    },
-  },
-  {
-    name: 'Dashboard',
-    path: '/',
-    component: Layout,
-    meta: {
-      title: '应急管理专题',
-      // icon: 'mdi:chart-bar',
-    },
+    children: [
+      {
+        name: 'Accounts',
+        path: 'accounts',
+        component: ManagementAccountsIndex,
+        meta: {
+          title: '管理记录'
+        }
+      },
+    ]
   },
   
 

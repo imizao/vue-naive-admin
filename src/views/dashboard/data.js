@@ -49,7 +49,7 @@ export const operatingJson = {
         },
         {
             key: 'description',
-            title: '说明'
+            title: '修改说明'
         }
     ],
 }
@@ -105,7 +105,7 @@ export const netProfitJson = {
         },
         {
             key: 'description',
-            title: '说明'
+            title: '修改说明'
         }
     ],
 }
@@ -142,7 +142,7 @@ export const assetsAndLiabilitiesJson1 = {
         },
         {
             key: 'description',
-            title: '说明'
+            title: '修改说明'
         }
     ],
 }
@@ -178,7 +178,7 @@ export const assetsAndLiabilitiesJson2 = {
         },
         {
             key: 'description',
-            title: '说明'
+            title: '修改说明'
         }
     ],
 }
@@ -230,7 +230,7 @@ export const investmentAnalysisJson1 = {
         },
         {
             key: 'description',
-            title: '说明'
+            title: '修改说明'
         }
     ],
 }
@@ -281,7 +281,7 @@ export const investmentAnalysisJson2 = {
         },
         {
             key: 'description',
-            title: '说明'
+            title: '修改说明'
         }
     ],
 }
