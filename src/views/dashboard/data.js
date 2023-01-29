@@ -47,7 +47,10 @@ export const operatingJson = {
             key: 'revenueCompRateTb',
             title: '同比增长(%)'
         },
-        
+        {
+            key: 'description',
+            title: '说明'
+        }
     ],
 }
 // 净利润
@@ -100,7 +103,10 @@ export const netProfitJson = {
             key: 'profitCompRateTb',
             title: '同比增长(%)'
         },
-        
+        {
+            key: 'description',
+            title: '说明'
+        }
     ],
 }
 
@@ -134,6 +140,10 @@ export const assetsAndLiabilitiesJson1 = {
             key: 'liabilitiesQm',
             title: '负债'
         },
+        {
+            key: 'description',
+            title: '说明'
+        }
     ],
 }
 // 资产负债2
@@ -166,6 +176,10 @@ export const assetsAndLiabilitiesJson2 = {
             key: 'liabilitiesQm2',
             title: '负债'
         },
+        {
+            key: 'description',
+            title: '说明'
+        }
     ],
 }
 // 投资分析
@@ -214,6 +228,10 @@ export const investmentAnalysisJson1 = {
             key: 'completionRate',
             title: '完成率(%)'
         },
+        {
+            key: 'description',
+            title: '说明'
+        }
     ],
 }
 export const investmentAnalysisJson2 = {
@@ -261,5 +279,9 @@ export const investmentAnalysisJson2 = {
             key: 'complRate',
             title: '完成率(%)'
         },
+        {
+            key: 'description',
+            title: '说明'
+        }
     ],
 }

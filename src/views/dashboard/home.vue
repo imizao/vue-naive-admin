@@ -149,7 +149,7 @@ const operatingData = (data, tableData) => {
         title: '',
         render(row, index) {
           return h('div', {
-            style: 'width: 200px;text-align: center',
+            style: 'width: 100px;text-align: center',
             innerHTML: row.baseName,
           })
         },
@@ -158,12 +158,13 @@ const operatingData = (data, tableData) => {
     return {
       title: item.title,
       render(row, index) {
-        return h(NInputNumber, {
+        return h(item.title == '说明' ? NInput : NInputNumber, {
           showButton: false,
           value: row[item.key],
-          style: 'width: 150px',
+          style: item.title == '说明' ?'width: auto':'width: 100px',
+          status: false ? 'warning' : 'success',
           onUpdateValue: (v) => {
-            tableData[index][item.key] = Number(v)
+            tableData[index][item.key] = v
           },
         })
       },
