@@ -169,28 +169,75 @@ export const assetsAndLiabilitiesJson2 = {
     ],
 }
 // 投资分析
-export const investmentAnalysisJson = {
+export const investmentAnalysisJson1 = {
     name: '投资分析',
     data: [
         {
             name: '总投资',
-            value: 'InvestmentAnalysisTotalInvestment'
+            value: 'investmentAnalysisTotalInvestment'
+        },
+        // {
+        //     name: '政投',
+        //     value: 'investmentAnalysisPoliticalInvestment'
+        // },
+        // {
+        //     name: '社投',
+        //     value: 'investmentAnalysisSocialInvestment'
+        // },
+        // {
+        //     name: '征拆投资',
+        //     value: 'investmentAnalysisZctz'
+        // },
+        // {
+        //     name: '股权及金融投资',
+        //     value: 'investmentAnalysisGqjjjtz'
+        // },
+    ],
+    columns: [
+        {
+            key: 'name',
+            title: ''
         },
         {
+            key: 'investmentPlan',
+            title: '本年计划(元)'
+        },
+        {
+            key: 'investmentPlanMom',
+            title: '本月完成(元)'
+        },
+        {
+            key: 'investmentTotal',
+            title: '本年完成(元)'
+        },
+        {
+            key: 'completionRate',
+            title: '完成率(%)'
+        },
+    ],
+}
+export const investmentAnalysisJson2 = {
+    name: '投资分析',
+    data: [
+        // {
+        //     name: '总投资',
+        //     value: 'investmentAnalysisTotalInvestment'
+        // },
+        {
             name: '政投',
-            value: 'InvestmentAnalysisPoliticalInvestment'
+            value: 'investmentAnalysisPoliticalInvestment'
         },
         {
             name: '社投',
-            value: 'InvestmentAnalysisSocialInvestment'
+            value: 'investmentAnalysisSocialInvestment'
         },
         {
-            name: '政拆投资',
-            value: 'InvestmentAnalysisZctz'
+            name: '征拆投资',
+            value: 'investmentAnalysisZctz'
         },
         {
             name: '股权及金融投资',
-            value: 'InvestmentAnalysisGqjjjtz'
+            value: 'investmentAnalysisGqjjjtz'
         },
     ],
     columns: [
@@ -199,16 +246,20 @@ export const investmentAnalysisJson = {
             title: ''
         },
         {
-            key: 'totalAssetsQm',
-            title: '总资产'
+            key: 'planMoneyYear',
+            title: '本年计划(元)'
+        },
+        // {
+        //     key: 'investmentPlanMom',
+        //     title: '本月完成(元)'
+        // },
+        {
+            key: 'totalMoneyYear',
+            title: '本年完成(元)'
         },
         {
-            key: 'netAssetsQc',
-            title: '净资产'
-        },
-        {
-            key: 'liabilitiesQc',
-            title: '负债'
+            key: 'complRate',
+            title: '完成率(%)'
         },
     ],
 }

@@ -11,7 +11,7 @@
         />
       </div>
       <div flex>
-        <n-button style="margin-right: 40px" type="primary" @click="handleCreate">保存</n-button>
+        <n-button style="margin-right: 40px" type="primary" @click="handleSave">保存</n-button>
         <n-button style="margin-right: 20px" type="primary" @click="handleCreate">审核</n-button>
       </div>
     </div>
@@ -45,23 +45,40 @@
       :columns="operatingData(assetsAndLiabilitiesJson2, state.assetsAndLiabilitiesTableData2)"
       :row-key="(row) => row.id"
     />
+    <div class="header">投资分析</div>
+    <n-data-table
+      mt-20
+      :loading="state.loading"
+      :data="state.investmentAnalysisTableData1"
+      :columns="operatingData(investmentAnalysisJson1, state.investmentAnalysisTableData1)"
+      :row-key="(row) => row.id"
+    />
+    <n-data-table
+      :loading="state.loading"
+      :data="state.investmentAnalysisTableData2"
+      :columns="operatingData(investmentAnalysisJson2, state.investmentAnalysisTableData2)"
+      :row-key="(row) => row.id"
+    />
   </div>
 </template>
 
 <script setup>
 import { reactive, onMounted,ref } from 'vue'
 import { NInput, NInputNumber,NDataTable } from 'naive-ui'
-import { operatingJson, netProfitJson, assetsAndLiabilitiesJson1, assetsAndLiabilitiesJson2 } from './data'
+import { operatingJson, netProfitJson, assetsAndLiabilitiesJson1, assetsAndLiabilitiesJson2, investmentAnalysisJson1, investmentAnalysisJson2 } from './data'
 import { integrationTable, decouplingTable } from './useTable'
 import { getDataList,saveDataList } from '@/api/user'
 import dayjs from 'dayjs'
 
 const state = reactive({
   loading: false,
+  isCheck: false,
   operatingTableData: [],
   netProfitTableData: [],
   assetsAndLiabilitiesTableData1: [],
   assetsAndLiabilitiesTableData2: [],
+  investmentAnalysisTableData1: [],
+  investmentAnalysisTableData2: [],
 })
 
 let timestamp = ref(null)
@@ -112,6 +129,17 @@ const setAllData = (data) => {
     state.assetsAndLiabilitiesTableData2 = table
     operatingData(assetsAndLiabilitiesJson2, state.assetsAndLiabilitiesTableData2)
   }
+  // 投资分析
+  {
+    let table = integrationTable(investmentAnalysisJson1, data)
+    state.investmentAnalysisTableData1 = table
+    operatingData(investmentAnalysisJson1, state.investmentAnalysisTableData1)
+  }
+  {
+    let table = integrationTable(investmentAnalysisJson2, data)
+    state.investmentAnalysisTableData2 = table
+    operatingData(investmentAnalysisJson2, state.investmentAnalysisTableData2)
+  }
 }
 
 const operatingData = (data, tableData) => {
@@ -142,21 +170,30 @@ const operatingData = (data, tableData) => {
     }
   })
 }
+const handleSave = () => {
+  state.isCheck = true
+  $message.success('保存成功!')
+}
 
 const handleCreate = () => {
+  // if (!state.isCheck) return $message.warning('请先提交审核！')
+  if (!state.isCheck) return $message.warning('请先保存信息！')
   let obj = {
     ...decouplingTable(operatingJson, state.operatingTableData),
     ...decouplingTable(netProfitJson, state.netProfitTableData),
     ...decouplingTable(assetsAndLiabilitiesJson1, state.assetsAndLiabilitiesTableData1),
     ...decouplingTable(assetsAndLiabilitiesJson2, state.assetsAndLiabilitiesTableData2),
+    ...decouplingTable(investmentAnalysisJson1, state.investmentAnalysisTableData1),
+    ...decouplingTable(investmentAnalysisJson2, state.investmentAnalysisTableData2),
     yearsMonth: dayjs(timestamp.value).format('YYYY-MM')
   }
   saveDataList(obj).then(res => {
     if (res.code == 0) {
-      $message.success('保存成功')
+      $message.success('审核成功!')
     }
   })
-  console.log(obj)
+  state.isCheck = false
+  // console.log(obj)
 }
 function disablePreviousDate(ts) {
   return ts > dayjs(dayjs().add(-1, 'month').startOf('month').format('YYYY-MM')).$d

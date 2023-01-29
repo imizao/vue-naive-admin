@@ -3,6 +3,7 @@ export const integrationTable = (data, returndata) => {
     data.data.forEach(item => {
         let obj = {
             baseName: item.name,
+            compBusinessSegments: item.name
         }
         for (let key in returndata) {
             if (key == item.value) {
