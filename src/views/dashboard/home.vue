@@ -1,6 +1,6 @@
 <template>
   <div p-24>
-    <div flex class="flex-box">
+    <div flex class="flex-box" v-if="!isAccounts">
       <div flex style="align-items: center">
         你要修改的月份是：<n-date-picker
           v-model:value="timestamp"
@@ -11,7 +11,7 @@
         />
       </div>
       <div flex>
-        <n-button style="margin-right: 40px" type="primary" @click="handleSave">保存</n-button>
+        <n-button style="margin-right: 40px" type="primary" @click="handleSave">保存草稿</n-button>
         <n-button style="margin-right: 20px" type="primary" @click="handleCreate">审核</n-button>
       </div>
     </div>
@@ -39,12 +39,12 @@
       :columns="operatingData(assetsAndLiabilitiesJson1, state.assetsAndLiabilitiesTableData1)"
       :row-key="(row) => row.id"
     />
-    <n-data-table
+    <!-- <n-data-table
       :loading="state.loading"
       :data="state.assetsAndLiabilitiesTableData2"
       :columns="operatingData(assetsAndLiabilitiesJson2, state.assetsAndLiabilitiesTableData2)"
       :row-key="(row) => row.id"
-    />
+    /> -->
     <div class="header">投资分析</div>
     <n-data-table
       mt-20
@@ -64,15 +64,26 @@
 
 <script setup>
 import { reactive, onMounted, ref } from 'vue'
-import { NInput, NInputNumber,NDataTable } from 'naive-ui'
-import { operatingJson, netProfitJson, assetsAndLiabilitiesJson1, assetsAndLiabilitiesJson2, investmentAnalysisJson1, investmentAnalysisJson2 } from './data'
-import { integrationTable, decouplingTable } from './useTable'
-import { getDataList, saveDataList } from '@/api/user'
+import { NInput, NInputNumber, NDataTable } from 'naive-ui'
+import {
+  operatingJson,
+  netProfitJson,
+  assetsAndLiabilitiesJson1,
+  // assetsAndLiabilitiesJson2,
+  investmentAnalysisJson1,
+  investmentAnalysisJson2,
+} from './data'
+import { integrationTable, decouplingTable,checkKeysDuplicate } from './useTable'
+import { getDataList, saveDataList, saveDraft, saveCockpit, searchBusiness } from '@/api/user'
 import dayjs from 'dayjs'
+import { useUserStore } from '@/store/modules/user'
+
+const userStore = useUserStore()
 
 const state = reactive({
   loading: false,
   isCheck: false,
+  editDataList: {},
   operatingTableData: [],
   netProfitTableData: [],
   assetsAndLiabilitiesTableData1: [],
@@ -82,18 +93,31 @@ const state = reactive({
 })
 
 let timestamp = ref(null)
-
+let isAccounts = ref(userStore.isAccounts)
+userStore.$subscribe((mutation, state) => {
+  // debugger
+  isAccounts.value = state.isAccounts
+})
 onMounted(() => {
   init()
+  // console.log(isAccounts)
 })
 
 const init = async () => {
-  let time = {
-    // yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-MM'),
-    yearsMonth: '2022-12',
+  let res = {}
+  if (!isAccounts.value) {
+    let time = {
+      yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-MM'),
+      // yearsMonth: '2022-12',
+    }
+    timestamp.value = dayjs(time.yearsMonth).$d
+    res = await getDataList(time)
+  } else {
+    let parame = {
+      id: userStore.accountsId
+    }
+    res = await searchBusiness(parame)
   }
-  timestamp.value = dayjs(time.yearsMonth).$d
-  let res = await getDataList(time)
   setAllData(res.data)
 }
 const getDataListFn = (e) => {
@@ -125,11 +149,11 @@ const setAllData = (data) => {
     state.assetsAndLiabilitiesTableData1 = table
     operatingData(assetsAndLiabilitiesJson1, state.assetsAndLiabilitiesTableData1)
   }
-  {
-    let table = integrationTable(assetsAndLiabilitiesJson2, data)
-    state.assetsAndLiabilitiesTableData2 = table
-    operatingData(assetsAndLiabilitiesJson2, state.assetsAndLiabilitiesTableData2)
-  }
+  // {
+  //   let table = integrationTable(assetsAndLiabilitiesJson2, data)
+  //   state.assetsAndLiabilitiesTableData2 = table
+  //   operatingData(assetsAndLiabilitiesJson2, state.assetsAndLiabilitiesTableData2)
+  // }
   // 投资分析
   {
     let table = integrationTable(investmentAnalysisJson1, data)
@@ -162,35 +186,104 @@ const operatingData = (data, tableData) => {
         return h(item.key == 'remark' ? NInput : NInputNumber, {
           showButton: false,
           value: row[item.key],
-          style: item.key == 'remark' ?'width: auto':'width: 100px',
+          style: item.key == 'remark' ? 'width: auto' : 'width: 100px',
+          // disabled: !userStore.isAccounts,
           status: row[`${item.key}Status`] ? 'warning' : 'success',
           onUpdateValue: (v) => {
             tableData[index][item.key] = v
             tableData[index][`${item.key}Status`] = true
+            if (!tableData[index]['editKeys']) {
+              tableData[index]['editKeys'] = ''
+            }
+            // debugger
+            tableData[index]['editKeys'] = checkKeysDuplicate(tableData[index]['editKeys'],item.key)
+              ? tableData[index]['editKeys']
+              : tableData[index]['editKeys']
+              ? `${tableData[index]['editKeys']},${item.key}`
+              : item.key
+
+            let obj = {}
+            obj[`${tableData[index]['parentNameFrontEnd']}`] = tableData[index]
+            state.editDataList = {
+              ...state.editDataList,
+              ...obj,
+            }
+
+            // console.log(state.editDataList)
+            // console.log(tableData[index])
+            console.log(tableData[index]['editKeys'])
           },
         })
       },
     }
   })
 }
-const handleSave = () => {
+
+const stateParameterObj = () => {
+  let obj = {}
+  for (let key in state.editDataList) {
+    let keyArr = state.editDataList[key].editKeys.split(',')
+    keyArr.forEach((i) => {
+      let aObj = {}
+      aObj[i] = state.editDataList[key][i]
+      obj[key] = {
+        ...obj[key],
+        ...aObj,
+      }
+    })
+  }
+  return obj
+}
+
+const handleSave = async () => {
+  let parame = {
+    dataDate: dayjs(timestamp.value).format('YYYY-MM'),
+    createName: '张大大',
+    afterJson: JSON.stringify(stateParameterObj()),
+  }
+  console.log(parame)
+  let res = await saveDraft(parame)
+  if (res.code == 0) {
+    state.isCheck = true
+    $message.success('保存成功!')
+  } else {
+    $message.error('保存失败!')
+  }
+}
+
+const handleCreate = async () => {
+  if (!state.isCheck) return $message.warning('请先保存草稿！')
+  let parame = {
+    dataDate: dayjs(timestamp.value).format('YYYY-MM'),
+    createName: '张大大',
+    afterJson: JSON.stringify(stateParameterObj()),
+  }
+  console.log(parame)
+  let res = await saveCockpit(parame)
+  if (res.code == 0) {
+    $message.success('提交成功!')
+  } else {
+    $message.error('提交失败!')
+  }
+  state.isCheck = false
+}
+const handleSaveOld = () => {
   state.isCheck = true
   $message.success('保存成功!')
 }
 
-const handleCreate = () => {
-  // if (!state.isCheck) return $message.warning('请先提交审核！')
+const handleCreateOld = () => {
   if (!state.isCheck) return $message.warning('请先保存信息！')
   let obj = {
     ...decouplingTable(operatingJson, state.operatingTableData),
     ...decouplingTable(netProfitJson, state.netProfitTableData),
     ...decouplingTable(assetsAndLiabilitiesJson1, state.assetsAndLiabilitiesTableData1),
-    ...decouplingTable(assetsAndLiabilitiesJson2, state.assetsAndLiabilitiesTableData2),
+    // ...decouplingTable(assetsAndLiabilitiesJson2, state.assetsAndLiabilitiesTableData2),
     ...decouplingTable(investmentAnalysisJson1, state.investmentAnalysisTableData1),
     ...decouplingTable(investmentAnalysisJson2, state.investmentAnalysisTableData2),
-    yearsMonth: dayjs(timestamp.value).format('YYYY-MM')
+    yearsMonth: dayjs(timestamp.value).format('YYYY-MM'),
   }
-  saveDataList(obj).then(res => {
+  saveDataList(obj).then((res) => {
     if (res.code == 0) {
       $message.success('审核成功!')
     }

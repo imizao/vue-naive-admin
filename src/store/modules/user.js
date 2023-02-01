@@ -7,6 +7,8 @@ export const useUserStore = defineStore('user', {
   state() {
     return {
       userInfo: {},
+      isAccounts: false,
+      accountsId: ''
     }
   },
   getters: {
@@ -22,6 +24,9 @@ export const useUserStore = defineStore('user', {
     role() {
       return this.userInfo?.role || []
     },
+    // isAccounts() {
+    //   return this.isAccounts
+    // },
   },
   actions: {
     async getUserInfo() {
@@ -56,5 +61,11 @@ export const useUserStore = defineStore('user', {
     setUserInfo(userInfo = {}) {
       this.userInfo = { ...this.userInfo, ...userInfo }
     },
+    setIsAccounts(bool) {
+      this.isAccounts = bool
+    },
+    setAccountsId(id) {
+      this.accountsId = id
+    }
   },
 })

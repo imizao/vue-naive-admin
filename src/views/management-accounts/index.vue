@@ -1,49 +1,88 @@
 <template>
   <div p-24>
-    <n-data-table :columns="state.columns" :data="state.data" :pagination="state.pagination" />
+    <n-data-table :columns="state.columns" :data="state.data" :pagination="paginationReactive" />
     <!-- style="width:1000px;height: 500px; overflow-y: auto" -->
     <n-modal style="width: 1000px" v-model:show="state.showModal" preset="dialog" closable="true" title="Dialog">
       <template #header>
-        <div>标题</div>
+        <div>{{ state.dialogTitle }}</div>
       </template>
       <!-- <div>内容</div> -->
-      <Home />
-      <template #action>
-        <n-button> 驳回 </n-button>
-        <n-button type="primary"> 通过 </n-button>
+      <n-tabs type="line" animated @update:value="onChangeTabs">
+        <n-tab-pane name="detail" tab="详情">
+          <div>经营总览专题：{{ state.dataDate }}</div>
+          <Home />
+          <div v-if="state.dialogTitle != '待审核'">审核意见：{{ '' }}</div>
+          <div v-if="state.dialogTitle == '待审核'">
+            审核意见：<n-input v-model:value="value" type="textarea" placeholder="请填写审核意见" />
+          </div>
+        </n-tab-pane>
+        <n-tab-pane name="timeline" tab="流程记录">
+          <n-timeline>
+            <n-timeline-item
+              type="info"
+              v-for="item in state.timelineList"
+              :title="item.nodeName"
+              :content="`操作人员：${item.createName} ${
+                item.statusOpName ? `审核结果：${item.statusOpName}` : ''
+              } 耗时：${item.timeConsuming}s`"
+              :time="`操作时间：${item.createTime}`"
+              :key="item.id"
+            />
+            <!-- <n-timeline-item type="success" title="成功" content="哪里成功" time="2018-04-03 20:46" />
+            <n-timeline-item type="error" content="哪里错误" time="2018-04-03 20:46" />
+            <n-timeline-item type="warning" title="警告" content="哪里警告" time="2018-04-03 20:46" />
+            <n-timeline-item type="info" title="信息" content="是的" time="2018-04-03 20:46" line-type="dashed" />
+            <n-timeline-item content="啊" /> -->
+          </n-timeline>
+        </n-tab-pane>
+      </n-tabs>
+
+      <template #action v-if="state.isShowActive">
+        <n-button v-if="state.dialogTitle == '待审核'" @click="processRecordUpdateBhFn" type="primary"> 驳回 </n-button>
+        <n-button v-if="state.dialogTitle == '待审核'" @click="processRecordUpdateTgFn" type="primary"> 通过 </n-button>
+        <n-button v-if="state.dialogTitle == '被驳回'" @click="processRecordUpdateGbFn" type="primary">
+          关闭流程
+        </n-button>
+        <n-button v-if="state.dialogTitle == '被驳回'" @click="processRecordUpdateTgFn" type="primary">
+          重新提交
+        </n-button>
       </template>
     </n-modal>
   </div>
 </template>
 
 <script setup>
-import { h, ref } from 'vue'
+import { h, onMounted, ref, reactive, watch } from 'vue'
 import { NButton, useMessage } from 'naive-ui'
 import Home from '@/views/dashboard/home.vue'
+import { manageRecordPage, processRecordList, processRecordUpdateBh, processRecordUpdateTg, processRecordUpdateGb } from '@/api/user'
+import { useUserStore } from '@/store/modules/user'
+
+const userStore = useUserStore()
 const message = useMessage()
 
-const data = [
-  { no: 3, title: 'Wonderwall', length: '4:18' },
-  { no: 4, title: "Don't Look Back in Anger", length: '4:48' },
-  { no: 12, title: 'Champagne Supernova', length: '7:27' },
-]
+// const data = [
+//   { no: 3, title: 'Wonderwall', length: '4:18' },
+//   { no: 4, title: "Don't Look Back in Anger", length: '4:48' },
+//   { no: 12, title: 'Champagne Supernova', length: '7:27' },
+// ]
 const createColumns = ({ play }) => {
   return [
     {
       title: '序号',
-      key: 'no',
+      key: 'xh',
     },
     {
       title: '发起时间',
-      key: 'title',
+      key: 'createTime',
     },
     {
       title: '发起人员',
-      key: 'length',
+      key: 'createName',
     },
     {
       title: '状态',
-      key: 'length',
+      key: 'auditStatusName',
     },
     {
       title: '操作',
@@ -64,10 +103,37 @@ const createColumns = ({ play }) => {
     },
   ]
 }
+
+const paginationReactive = reactive({
+  page: 1,
+  pageSize: 10,
+  // itemCount: 0,
+  pageCount: 0,
+  showSizePicker: true,
+  // pageSizes: [10, 20, 50],
+  // pageSizes: [1, 2, 50],
+  onChange: (page) => {
+    paginationReactive.page = page
+    manageRecordPageFn()
+  },
+  onUpdatePageSize: (pageSize) => {
+    paginationReactive.pageSize = pageSize
+    paginationReactive.page = 1
+    manageRecordPageFn()
+  },
+})
+
 const state = reactive({
-  data,
+  data: [],
+  dialogTitle: '',
+  dataDate: '',
+  timelineList: [],
   columns: createColumns({
     play(row) {
+      state.dialogTitle = row.auditStatusName
+      state.dataDate = row.dataDate
+      // userStore.setIsAccounts(true)
+      userStore.setAccountsId(row.id)
       state.showModal = true
       //   message.info(`Play ${row.title}`)
       //   $dialog.confirm({
@@ -80,9 +146,113 @@ const state = reactive({
       //   })
     },
   }),
-  pagination: true,
+  pagination: paginationReactive,
   showModal: false,
+  isShowActive: true,
 })
+
+watch(
+  () => state.showModal,
+  (value, oldValue) => {
+    if (!value) {
+      // setTimeout(()=> {
+      //   userStore.setIsAccounts(false)
+      // },1000)
+      userStore.setIsAccounts(false)
+    } else {
+      userStore.setIsAccounts(true)
+      processRecordListFn()
+    }
+    console.log(value, oldValue)
+  }
+)
+
+onMounted(() => {
+  init()
+})
+
+const init = () => {
+  manageRecordPageFn()
+}
+
+const manageRecordPageFn = async () => {
+  let parame = {
+    page: paginationReactive.page,
+    limit: paginationReactive.pageSize,
+  }
+  let res = await manageRecordPage(parame)
+  if (res.code == 0) {
+    state.data = res.data.records
+    // paginationReactive.itemCount = Number(res.data.total)
+    paginationReactive.pageCount = Number(res.data.pages)
+  }
+  // console.log(res)
+}
+
+const onChangeTabs = (val) => {
+  // console.log(val)
+  if (val == 'timeline') {
+    state.isShowActive = false
+  } else {
+    state.isShowActive = true
+  }
+}
+
+const processRecordUpdateBhFn = async () => {
+  let parame = {
+    id: userStore.accountsId,
+  }
+  let res = await processRecordUpdateBh(parame)
+  if (res.code == 0) {
+    $message.success('驳回成功')
+    state.showModal = false
+    init()
+  } else {
+    $message.error(res.msg)
+  }
+  // console.log(res)
+}
+const processRecordUpdateTgFn = async () => {
+  let parame = {
+    id: userStore.accountsId,
+  }
+  let res = await processRecordUpdateTg(parame)
+  if (res.code == 0) {
+    $message.success('已通过！')
+    state.showModal = false
+    init()
+  } else {
+    $message.error(res.msg)
+  }
+  // console.log(res)
+}
+const processRecordUpdateGbFn = async () => {
+  let parame = {
+    id: userStore.accountsId,
+  }
+  let res = await processRecordUpdateGb(parame)
+  if (res.code == 0) {
+    $message.success('关闭成功！')
+    state.showModal = false
+    init()
+  } else {
+    $message.error(res.msg)
+  }
+  // console.log(res)
+}
+const processRecordListFn = async () => {
+  let parame = {
+    id: userStore.accountsId,
+  }
+  let res = await processRecordList(parame)
+  // console.log(res)
+  if (res.code == 0) {
+    state.timelineList = res.data
+  } else {
+    $message.error(res.msg)
+  }
+  console.log(res)
+}
 </script>
 
 <style lang="scss" scoped>

@@ -115,8 +115,8 @@ export const assetsAndLiabilitiesJson1 = {
     name: '资产负债',
     data: [
         {
-            name: '含水业燃气',
-            value: 'assetsAndLiabilitiesWaterGas'
+            name: '',
+            value: 'zcfz'
         },
         // {
         //     name: '不含水业燃气',
@@ -124,21 +124,33 @@ export const assetsAndLiabilitiesJson1 = {
         // },
     ],
     columns: [
+        // {
+        //     key: 'name',
+        //     title: ''
+        // },
         {
-            key: 'name',
-            title: ''
+            key: 'totalAssetsQm2',
+            title: '总资产(元)'
+        },
+        {
+            key: 'netAssetsQm2',
+            title: '净资产(元)'
+        },
+        {
+            key: 'liabilitiesQm2',
+            title: '负债(元)'
         },
         {
             key: 'totalAssetsQm',
-            title: '总资产'
+            title: '总资产-含水业燃气(元)'
         },
         {
             key: 'netAssetsQm',
-            title: '净资产'
+            title: '净资产-含水业燃气(元)'
         },
         {
             key: 'liabilitiesQm',
-            title: '负债'
+            title: '负债-含水业燃气(元)'
         },
         {
             key: 'remark',
@@ -147,41 +159,41 @@ export const assetsAndLiabilitiesJson1 = {
     ],
 }
 // 资产负债2
-export const assetsAndLiabilitiesJson2 = {
-    name: '资产负债',
-    data: [
-        // {
-        //     name: '含水业燃气',
-        //     value: 'assetsAndLiabilitiesWaterGas'
-        // },
-        {
-            name: '不含水业燃气',
-            value: 'assetsAndLiabilitiesNotWaterGas'
-        },
-    ],
-    columns: [
-        {
-            key: 'name',
-            title: ''
-        },
-        {
-            key: 'totalAssetsQm2',
-            title: '总资产'
-        },
-        {
-            key: 'netAssetsQm2',
-            title: '净资产'
-        },
-        {
-            key: 'liabilitiesQm2',
-            title: '负债'
-        },
-        {
-            key: 'remark',
-            title: '修改说明'
-        }
-    ],
-}
+// export const assetsAndLiabilitiesJson2 = {
+//     name: '资产负债',
+//     data: [
+//         // {
+//         //     name: '含水业燃气',
+//         //     value: 'assetsAndLiabilitiesWaterGas'
+//         // },
+//         {
+//             name: '不含水业燃气',
+//             value: 'assetsAndLiabilitiesNotWaterGas'
+//         },
+//     ],
+//     columns: [
+//         {
+//             key: 'name',
+//             title: ''
+//         },
+//         {
+//             key: 'totalAssetsQm2',
+//             title: '总资产'
+//         },
+//         {
+//             key: 'netAssetsQm2',
+//             title: '净资产'
+//         },
+//         {
+//             key: 'liabilitiesQm2',
+//             title: '负债'
+//         },
+//         {
+//             key: 'remark',
+//             title: '修改说明'
+//         }
+//     ],
+// }
 // 投资分析
 export const investmentAnalysisJson1 = {
     name: '投资分析',
