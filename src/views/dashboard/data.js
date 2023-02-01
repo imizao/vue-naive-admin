@@ -48,7 +48,7 @@ export const operatingJson = {
             title: '同比增长(%)'
         },
         {
-            key: 'description',
+            key: 'remark',
             title: '修改说明'
         }
     ],
@@ -104,7 +104,7 @@ export const netProfitJson = {
             title: '同比增长(%)'
         },
         {
-            key: 'description',
+            key: 'remark',
             title: '修改说明'
         }
     ],
@@ -141,7 +141,7 @@ export const assetsAndLiabilitiesJson1 = {
             title: '负债'
         },
         {
-            key: 'description',
+            key: 'remark',
             title: '修改说明'
         }
     ],
@@ -177,7 +177,7 @@ export const assetsAndLiabilitiesJson2 = {
             title: '负债'
         },
         {
-            key: 'description',
+            key: 'remark',
             title: '修改说明'
         }
     ],
@@ -229,7 +229,7 @@ export const investmentAnalysisJson1 = {
             title: '完成率(%)'
         },
         {
-            key: 'description',
+            key: 'remark',
             title: '修改说明'
         }
     ],
@@ -280,7 +280,7 @@ export const investmentAnalysisJson2 = {
             title: '完成率(%)'
         },
         {
-            key: 'description',
+            key: 'remark',
             title: '修改说明'
         }
     ],

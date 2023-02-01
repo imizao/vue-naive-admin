@@ -1,12 +1,25 @@
 <template>
   <div p-24>
     <n-data-table :columns="state.columns" :data="state.data" :pagination="state.pagination" />
+    <!-- style="width:1000px;height: 500px; overflow-y: auto" -->
+    <n-modal style="width: 1000px" v-model:show="state.showModal" preset="dialog" closable="true" title="Dialog">
+      <template #header>
+        <div>标题</div>
+      </template>
+      <!-- <div>内容</div> -->
+      <Home />
+      <template #action>
+        <n-button> 驳回 </n-button>
+        <n-button type="primary"> 通过 </n-button>
+      </template>
+    </n-modal>
   </div>
 </template>
 
 <script setup>
 import { h, ref } from 'vue'
 import { NButton, useMessage } from 'naive-ui'
+import Home from '@/views/dashboard/home.vue'
 const message = useMessage()
 
 const data = [
@@ -55,10 +68,20 @@ const state = reactive({
   data,
   columns: createColumns({
     play(row) {
-      message.info(`Play ${row.title}`)
+      state.showModal = true
+      //   message.info(`Play ${row.title}`)
+      //   $dialog.confirm({
+      //     title: `${row.title}`,
+      //     type: 'info',
+      //     content: home,
+      //     confirm() {
+      //       $message.success('已退出登录')
+      //     },
+      //   })
     },
   }),
   pagination: true,
+  showModal: false,
 })
 </script>
 

@@ -63,11 +63,11 @@
 </template>
 
 <script setup>
-import { reactive, onMounted,ref } from 'vue'
+import { reactive, onMounted, ref } from 'vue'
 import { NInput, NInputNumber,NDataTable } from 'naive-ui'
 import { operatingJson, netProfitJson, assetsAndLiabilitiesJson1, assetsAndLiabilitiesJson2, investmentAnalysisJson1, investmentAnalysisJson2 } from './data'
 import { integrationTable, decouplingTable } from './useTable'
-import { getDataList,saveDataList } from '@/api/user'
+import { getDataList, saveDataList } from '@/api/user'
 import dayjs from 'dayjs'
 
 const state = reactive({
@@ -89,7 +89,8 @@ onMounted(() => {
 
 const init = async () => {
   let time = {
-    yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-MM'),
+    // yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-MM'),
+    yearsMonth: '2022-12',
   }
   timestamp.value = dayjs(time.yearsMonth).$d
   let res = await getDataList(time)
@@ -150,7 +151,7 @@ const operatingData = (data, tableData) => {
         render(row, index) {
           return h('div', {
             style: 'width: 100px;text-align: center',
-            innerHTML: row.baseName,
+            innerHTML: row.baseNameFrontEnd,
           })
         },
       }
@@ -158,10 +159,10 @@ const operatingData = (data, tableData) => {
     return {
       title: item.title,
       render(row, index) {
-        return h(item.key == 'description' ? NInput : NInputNumber, {
+        return h(item.key == 'remark' ? NInput : NInputNumber, {
           showButton: false,
           value: row[item.key],
-          style: item.key == 'description' ?'width: auto':'width: 100px',
+          style: item.key == 'remark' ?'width: auto':'width: 100px',
           status: row[`${item.key}Status`] ? 'warning' : 'success',
           onUpdateValue: (v) => {
             tableData[index][item.key] = v
