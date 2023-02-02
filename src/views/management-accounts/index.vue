@@ -35,23 +35,19 @@
               :title="item.nodeName"
               :content="`操作人员：${item.createName} ${
                 item.statusOpName ? `审核结果：${item.statusOpName}` : ''
-              } 耗时：${item.timeConsuming}s`"
+              } 耗时：${item.timeConsuming}`"
               :time="`操作时间：${item.createTime}`"
               :key="item.id"
             />
-            <!-- <n-timeline-item type="success" title="成功" content="哪里成功" time="2018-04-03 20:46" />
-            <n-timeline-item type="error" content="哪里错误" time="2018-04-03 20:46" />
-            <n-timeline-item type="warning" title="警告" content="哪里警告" time="2018-04-03 20:46" />
-            <n-timeline-item type="info" title="信息" content="是的" time="2018-04-03 20:46" line-type="dashed" />
-            <n-timeline-item content="啊" /> -->
+            
           </n-timeline>
         </n-tab-pane>
       </n-tabs>
 
       <template #action v-if="state.isShowActive">
-        <n-button v-if="state.dialogTitle == '待审核'" @click="processRecordUpdateBhFn" type="primary"> 驳回 </n-button>
-        <n-button v-if="state.dialogTitle == '待审核'" @click="processRecordUpdateTgFn" type="primary"> 通过 </n-button>
-        <n-button v-if="state.dialogTitle == '被驳回'" @click="processRecordUpdateGbFn" type="primary">
+        <n-button v-if="state.dialogTitle == '待审核' && proxy.$hasPermission('business:special_inquiry:process_record_update_bh')" @click="processRecordUpdateBhFn" type="primary"> 驳回 </n-button>
+        <n-button v-if="state.dialogTitle == '待审核' && proxy.$hasPermission('business:special_inquiry:process_record_update_tg')" @click="processRecordUpdateTgFn" type="primary"> 通过 </n-button>
+        <n-button v-if="state.dialogTitle == '被驳回' && proxy.$hasPermission('business:special_inquiry:process_record_update_gb')" @click="processRecordUpdateGbFn" type="primary">
           关闭流程
         </n-button>
         <n-button v-if="state.dialogTitle == '被驳回'" @click="processRecordUpdateTgFn" type="primary">
@@ -63,7 +59,7 @@
 </template>
 
 <script setup>
-import { h, onMounted, ref, reactive, watch } from 'vue'
+import { h, onMounted, ref, reactive, watch, getCurrentInstance } from 'vue'
 import { NButton, useMessage } from 'naive-ui'
 import Home from '@/views/dashboard/home.vue'
 import {
@@ -77,12 +73,9 @@ import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
 const message = useMessage()
+const { proxy } = getCurrentInstance()
 
-// const data = [
-//   { no: 3, title: 'Wonderwall', length: '4:18' },
-//   { no: 4, title: "Don't Look Back in Anger", length: '4:48' },
-//   { no: 12, title: 'Champagne Supernova', length: '7:27' },
-// ]
+
 const createColumns = ({ play }) => {
   return [
     {
@@ -129,7 +122,6 @@ const paginationReactive = reactive({
   showSizePicker: true,
   showQuickJumper: true,
   pageSizes: [5, 10, 20, 50],
-  // pageSizes: [1, 2, 50],
   onChange: (page) => {
     paginationReactive.page = page
     manageRecordPageFn()
@@ -166,15 +158,7 @@ const state = reactive({
       // userStore.setIsAccounts(true)
       userStore.setAccountsId(row.id)
       state.showModal = true
-      //   message.info(`Play ${row.title}`)
-      //   $dialog.confirm({
-      //     title: `${row.title}`,
-      //     type: 'info',
-      //     content: home,
-      //     confirm() {
-      //       $message.success('已退出登录')
-      //     },
-      //   })
+     
     },
   }),
   pagination: paginationReactive,

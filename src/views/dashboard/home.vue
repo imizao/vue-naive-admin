@@ -12,7 +12,7 @@
       </div>
       <div flex>
         <n-button style="margin-right: 40px" type="primary" @click="handleSave">保存草稿</n-button>
-        <n-button style="margin-right: 20px" type="primary" @click="handleCreate">审核</n-button>
+        <n-button v-if="proxy.$hasPermission('business:jyzlzt:saveCockpit')" style="margin-right: 20px" type="primary" @click="handleCreate">提交</n-button>
       </div>
     </div>
     <div class="header">营业收入</div>
@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, ref } from 'vue'
+import { reactive, onMounted, ref, getCurrentInstance } from 'vue'
 import { NInput, NInputNumber, NDataTable, NButton } from 'naive-ui'
 import {
   operatingJson,
@@ -79,12 +79,10 @@ import dayjs from 'dayjs'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
-
+const { proxy } = getCurrentInstance()
 const state = reactive({
   loading: false,
   isCheck: false,
-  // editDataList: {},
-  // draftDtoReturn: {},
   operatingTableData: [],
   netProfitTableData: [],
   assetsAndLiabilitiesTableData1: [],
@@ -96,12 +94,10 @@ const state = reactive({
 let timestamp = ref(null)
 let isAccounts = ref(userStore.isAccounts)
 userStore.$subscribe((mutation, state) => {
-  // debugger
   isAccounts.value = state.isAccounts
 })
 onMounted(() => {
   init()
-  // console.log(isAccounts)
 })
 
 const init = async () => {
@@ -119,9 +115,7 @@ const init = async () => {
     }
     res = await searchBusiness(parame)
   }
-  // if (res.data.draftDto) {
-  //   state.draftDtoReturn = res.data.draftDto
-  // }
+
   setAllData(res.data)
 }
 const getDataListFn = (e) => {
@@ -130,9 +124,7 @@ const getDataListFn = (e) => {
   }
   timestamp.value = dayjs(time.yearsMonth).$d
   getDataList(time).then((res) => {
-    // if (res.data.draftDto) {
-    //   state.draftDtoReturn = res.data.draftDto
-    // }
+
     setAllData(res.data)
   })
 }
@@ -222,7 +214,7 @@ const operatingData = (data, tableData) => {
             if (!tableData[index]['editKeys']) {
               tableData[index]['editKeys'] = ''
             }
-            // debugger
+           
             tableData[index]['editKeys'] = checkKeysDuplicate(tableData[index]['editKeys'], item.key)
               ? tableData[index]['editKeys']
               : tableData[index]['editKeys']
@@ -232,13 +224,7 @@ const operatingData = (data, tableData) => {
             let obj = {}
             obj[`${tableData[index]['parentNameFrontEnd']}`] = tableData[index]
             userStore.setHomeEditDataObj(obj)
-            // state.editDataList = {
-            //   ...state.editDataList,
-            //   ...obj,
-            // }
-
-            // console.log(state.editDataList)
-            // console.log(tableData[index])
+       
             console.log(tableData[index]['editKeys'])
           },
         })
@@ -248,7 +234,6 @@ const operatingData = (data, tableData) => {
 }
 
 const stateParameterObj = () => {
-  // console.log(userStore.homeEditDataObj)
   let editDataObj = userStore.homeEditDataObj
   let obj = {}
 
@@ -272,7 +257,6 @@ const handleSave = async () => {
     createName: '陈洁',
     afterJson: JSON.stringify(stateParameterObj()),
   }
-  // console.log(parame)
   let res = await saveDraft(parame)
   if (res.code == 0) {
     state.isCheck = true
@@ -283,7 +267,6 @@ const handleSave = async () => {
 }
 
 const handleCreate = async () => {
-  // if (!state.isCheck) return $message.warning('请先保存草稿！')
   let parame = {
     dataDate: dayjs(timestamp.value).format('YYYY-MM'),
     createName: '陈洁',

@@ -12,6 +12,17 @@
 
     <!-- <title><%= title %></title> -->
     <!-- <title>长沙城市发展集团</title> -->
+    <script>
+      window.SITE_CONFIG = {};
+      window.SITE_CONFIG['permissions'] = [
+        "business:jyzlzt:saveCockpit",  //提交
+        "business:special_inquiry:process_record_update_tg",  //审核通过
+        "business:special_inquiry:process_record_update_bh",  //审核驳回
+        "business:special_inquiry:manage_record_page",  //管理记录
+        "business:jyzlzt:search",  //经营总览专题
+        "business:special_inquiry:process_record_update_gb"  //关闭
+      ]
+    </script>
   </head>
 
   <body>

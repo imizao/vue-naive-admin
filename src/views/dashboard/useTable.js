@@ -5,7 +5,6 @@ import { useUserStore } from '@/store/modules/user'
 export const integrationTable = (data, returndata) => {
     
     let table = []
-    // console.log(returndata.draftDto.netProfitCityOperation)
     data.data.forEach(item => {
         let obj = {
             baseNameFrontEnd: item.name,
@@ -20,11 +19,8 @@ export const integrationTable = (data, returndata) => {
                 let isSaveStatus = false
                 if (returndata.draftDto && returndata.draftDto[key]) {
                     data.columns.forEach(i => {
-                        // console.log(i)
                         if (returndata.draftDto[key][i.key]) {
-                            debugger
                             isSaveStatus = true;
-                            // console.log(returndata.draftDto[key][i.key])
                             returnObj[i.key] = returndata.draftDto[key][i.key]
                             returnObj[`${i.key}Status`] = true
                             if (!returnObj['editKeys']) {
@@ -38,9 +34,6 @@ export const integrationTable = (data, returndata) => {
 
                         }
                     })
-                    // console.log(data.columns)
-                    // console.log(returndata.draftDto[key])
-                    // console.log(returndata[key])
                 }
                 obj = {
                     ...obj,
@@ -51,9 +44,7 @@ export const integrationTable = (data, returndata) => {
                     let aObj = {}
                     aObj[`${obj['parentNameFrontEnd']}`] = obj
                     userStore.setHomeEditDataObj(aObj)
-                    // console.log(userStore.homeEditDataObj)
                 }
-                // console.log(isSaveStatus)
                 table.push(obj)
             }
         }

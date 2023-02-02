@@ -45,44 +45,12 @@ export const basicRoutes = [
     children: [
       {
         name: 'Home',
-        path: '/',
-        redirect: '/home',
-        // component: Home,
+        path: 'home',
+        component: Home,
         meta: {
           title: '经营总览专题',
           // icon: 'mdi:home',
         },
-        children: [
-          {
-            name: 'Home',
-            path: 'home',
-            component: Home,
-            meta: {
-              title: '企业管理部',
-              // icon: 'mdi:home',
-            },
-
-          },
-          {
-            name: 'Home11',
-            path: 'caiwu',
-            component: NonePage,
-            meta: {
-              title: '财务部',
-              // icon: 'mdi:home',
-            },
-
-          },
-          {
-            name: 'Home12',
-            path: 'jrrj',
-            component: NonePage,
-            meta: {
-              title: '金融融资部',
-              // icon: 'mdi:home',
-            },
-          }
-        ]
       },
       {
         name: 'Home1',
@@ -150,7 +118,7 @@ export const basicRoutes = [
       },
     ]
   },
-
+  
 
   // {
   //   name: 'ErrorPage',

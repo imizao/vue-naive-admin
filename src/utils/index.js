@@ -74,3 +74,10 @@ export function debounce(method, wait, immediate) {
     }
   }
 }
+/**
+ * 权限
+ * @param {*} key
+ */
+export function hasPermission(key) {
+  return window.SITE_CONFIG['permissions'].includes(key) || false
+}
