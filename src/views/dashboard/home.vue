@@ -73,7 +73,7 @@ import {
   investmentAnalysisJson1,
   investmentAnalysisJson2,
 } from './data'
-import { integrationTable, decouplingTable,checkKeysDuplicate } from './useTable'
+import { integrationTable, decouplingTable, checkKeysDuplicate } from './useTable'
 import { getDataList, saveDataList, saveDraft, saveCockpit, searchBusiness } from '@/api/user'
 import dayjs from 'dayjs'
 import { useUserStore } from '@/store/modules/user'
@@ -83,7 +83,8 @@ const userStore = useUserStore()
 const state = reactive({
   loading: false,
   isCheck: false,
-  editDataList: {},
+  // editDataList: {},
+  // draftDtoReturn: {},
   operatingTableData: [],
   netProfitTableData: [],
   assetsAndLiabilitiesTableData1: [],
@@ -107,17 +108,20 @@ const init = async () => {
   let res = {}
   if (!isAccounts.value) {
     let time = {
-      yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-MM'),
-      // yearsMonth: '2022-12',
+      // yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-MM'),
+      yearsMonth: '2022-12',
     }
     timestamp.value = dayjs(time.yearsMonth).$d
     res = await getDataList(time)
   } else {
     let parame = {
-      id: userStore.accountsId
+      id: userStore.accountsId,
     }
     res = await searchBusiness(parame)
   }
+  // if (res.data.draftDto) {
+  //   state.draftDtoReturn = res.data.draftDto
+  // }
   setAllData(res.data)
 }
 const getDataListFn = (e) => {
@@ -126,6 +130,9 @@ const getDataListFn = (e) => {
   }
   timestamp.value = dayjs(time.yearsMonth).$d
   getDataList(time).then((res) => {
+    // if (res.data.draftDto) {
+    //   state.draftDtoReturn = res.data.draftDto
+    // }
     setAllData(res.data)
   })
 }
@@ -196,7 +203,7 @@ const operatingData = (data, tableData) => {
               tableData[index]['editKeys'] = ''
             }
             // debugger
-            tableData[index]['editKeys'] = checkKeysDuplicate(tableData[index]['editKeys'],item.key)
+            tableData[index]['editKeys'] = checkKeysDuplicate(tableData[index]['editKeys'], item.key)
               ? tableData[index]['editKeys']
               : tableData[index]['editKeys']
               ? `${tableData[index]['editKeys']},${item.key}`
@@ -204,10 +211,11 @@ const operatingData = (data, tableData) => {
 
             let obj = {}
             obj[`${tableData[index]['parentNameFrontEnd']}`] = tableData[index]
-            state.editDataList = {
-              ...state.editDataList,
-              ...obj,
-            }
+            userStore.setHomeEditDataObj(obj)
+            // state.editDataList = {
+            //   ...state.editDataList,
+            //   ...obj,
+            // }
 
             // console.log(state.editDataList)
             // console.log(tableData[index])
@@ -220,12 +228,15 @@ const operatingData = (data, tableData) => {
 }
 
 const stateParameterObj = () => {
+  // console.log(userStore.homeEditDataObj)
+  let editDataObj = userStore.homeEditDataObj
   let obj = {}
-  for (let key in state.editDataList) {
-    let keyArr = state.editDataList[key].editKeys.split(',')
+
+  for (let key in editDataObj) {
+    let keyArr = editDataObj[key].editKeys.split(',')
     keyArr.forEach((i) => {
       let aObj = {}
-      aObj[i] = state.editDataList[key][i]
+      aObj[i] = editDataObj[key][i]
       obj[key] = {
         ...obj[key],
         ...aObj,
@@ -241,7 +252,7 @@ const handleSave = async () => {
     createName: '张大大',
     afterJson: JSON.stringify(stateParameterObj()),
   }
-  console.log(parame)
+  // console.log(parame)
   let res = await saveDraft(parame)
   if (res.code == 0) {
     state.isCheck = true
@@ -252,13 +263,13 @@ const handleSave = async () => {
 }
 
 const handleCreate = async () => {
-  if (!state.isCheck) return $message.warning('请先保存草稿！')
+  // if (!state.isCheck) return $message.warning('请先保存草稿！')
   let parame = {
     dataDate: dayjs(timestamp.value).format('YYYY-MM'),
     createName: '张大大',
     afterJson: JSON.stringify(stateParameterObj()),
   }
-  console.log(parame)
+  // console.log(parame)
   let res = await saveCockpit(parame)
   if (res.code == 0) {
     $message.success('提交成功!')

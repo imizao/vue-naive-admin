@@ -8,7 +8,8 @@ export const useUserStore = defineStore('user', {
     return {
       userInfo: {},
       isAccounts: false,
-      accountsId: ''
+      accountsId: '',
+      homeEditDataObj: {}
     }
   },
   getters: {
@@ -66,6 +67,12 @@ export const useUserStore = defineStore('user', {
     },
     setAccountsId(id) {
       this.accountsId = id
+    },
+    setHomeEditDataObj(obj) {
+      this.homeEditDataObj = {
+        ...this.homeEditDataObj,
+        ...obj
+      }
     }
   },
 })

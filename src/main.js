@@ -3,10 +3,12 @@ import '@/styles/variables.css'
 import '@/styles/index.scss'
 import 'uno.css'
 
+
 import { createApp } from 'vue'
 import { setupRouter } from '@/router'
 import { setupStore } from '@/store'
 import App from './App.vue'
+import '@/views/dashboard/useTable.js'
 
 function setupApp() {
   const app = createApp(App)
