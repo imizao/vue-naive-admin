@@ -1,6 +1,17 @@
 <template>
   <div p-24>
-    <n-data-table :columns="state.columns" :data="state.data" :pagination="paginationReactive" />
+    <n-data-table :columns="state.columns" :data="state.data" />
+    <!-- :pagination="state.pagination" -->
+    <br />
+    <n-pagination
+      v-model:page="state.pagination.page"
+      :page-count="state.pagination.pageCount"
+      :page-sizes="[10, 20, 50, 100]"
+      show-size-picker
+      :on-update:page="(page) => onChangePage(page)"
+      :on-update:page-size="(pageSize) => onChangePageSize(pageSize)"
+      style="message: 10px 0 0"
+    />
     <!-- style="width:1000px;height: 500px; overflow-y: auto" -->
     <n-modal style="width: 1000px" v-model:show="state.showModal" preset="dialog" closable="true" title="Dialog">
       <template #header>
@@ -11,9 +22,9 @@
         <n-tab-pane name="detail" tab="详情">
           <div>经营总览专题：{{ state.dataDate }}</div>
           <Home />
-          <div v-if="state.dialogTitle != '待审核'">审核意见：{{ '' }}</div>
+          <div v-if="state.dialogTitle != '待审核'">审核意见：{{ state.auditRemakReturn }}</div>
           <div v-if="state.dialogTitle == '待审核'">
-            审核意见：<n-input v-model:value="value" type="textarea" placeholder="请填写审核意见" />
+            审核意见：<n-input v-model:value="state.auditRemak" type="textarea" placeholder="请填写审核意见" />
           </div>
         </n-tab-pane>
         <n-tab-pane name="timeline" tab="流程记录">
@@ -55,7 +66,13 @@
 import { h, onMounted, ref, reactive, watch } from 'vue'
 import { NButton, useMessage } from 'naive-ui'
 import Home from '@/views/dashboard/home.vue'
-import { manageRecordPage, processRecordList, processRecordUpdateBh, processRecordUpdateTg, processRecordUpdateGb } from '@/api/user'
+import {
+  manageRecordPage,
+  processRecordList,
+  processRecordUpdateBh,
+  processRecordUpdateTg,
+  processRecordUpdateGb,
+} from '@/api/user'
 import { useUserStore } from '@/store/modules/user'
 
 const userStore = useUserStore()
@@ -110,7 +127,8 @@ const paginationReactive = reactive({
   // itemCount: 0,
   pageCount: 0,
   showSizePicker: true,
-  // pageSizes: [10, 20, 50],
+  showQuickJumper: true,
+  pageSizes: [5, 10, 20, 50],
   // pageSizes: [1, 2, 50],
   onChange: (page) => {
     paginationReactive.page = page
@@ -123,15 +141,28 @@ const paginationReactive = reactive({
   },
 })
 
+const onChangePage = (page) => {
+  paginationReactive.page = page
+  manageRecordPageFn()
+}
+const onChangePageSize = (pageSize) => {
+  paginationReactive.pageSize = pageSize
+  paginationReactive.page = 1
+  manageRecordPageFn()
+}
+
 const state = reactive({
   data: [],
   dialogTitle: '',
   dataDate: '',
+  auditRemak: '',
+  auditRemakReturn: '',
   timelineList: [],
   columns: createColumns({
     play(row) {
       state.dialogTitle = row.auditStatusName
       state.dataDate = row.dataDate
+      state.auditRemakReturn = row.auditRemak
       // userStore.setIsAccounts(true)
       userStore.setAccountsId(row.id)
       state.showModal = true
@@ -162,6 +193,7 @@ watch(
     } else {
       userStore.setIsAccounts(true)
       processRecordListFn()
+      state.auditRemak = ''
     }
     console.log(value, oldValue)
   }
@@ -201,6 +233,7 @@ const onChangeTabs = (val) => {
 const processRecordUpdateBhFn = async () => {
   let parame = {
     id: userStore.accountsId,
+    auditRemak: state.auditRemak,
   }
   let res = await processRecordUpdateBh(parame)
   if (res.code == 0) {
@@ -215,6 +248,7 @@ const processRecordUpdateBhFn = async () => {
 const processRecordUpdateTgFn = async () => {
   let parame = {
     id: userStore.accountsId,
+    auditRemak: state.auditRemak,
   }
   let res = await processRecordUpdateTg(parame)
   if (res.code == 0) {
@@ -242,7 +276,7 @@ const processRecordUpdateGbFn = async () => {
 }
 const processRecordListFn = async () => {
   let parame = {
-    id: userStore.accountsId,
+    dataUpdateLogId: userStore.accountsId,
   }
   let res = await processRecordList(parame)
   // console.log(res)

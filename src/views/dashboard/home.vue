@@ -64,7 +64,7 @@
 
 <script setup>
 import { reactive, onMounted, ref } from 'vue'
-import { NInput, NInputNumber, NDataTable } from 'naive-ui'
+import { NInput, NInputNumber, NDataTable, NButton } from 'naive-ui'
 import {
   operatingJson,
   netProfitJson,
@@ -108,8 +108,8 @@ const init = async () => {
   let res = {}
   if (!isAccounts.value) {
     let time = {
-      // yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-MM'),
-      yearsMonth: '2022-12',
+      yearsMonth: dayjs().add(-1, 'month').startOf('month').format('YYYY-MM'),
+      // yearsMonth: '2022-12',
     }
     timestamp.value = dayjs(time.yearsMonth).$d
     res = await getDataList(time)
@@ -187,6 +187,26 @@ const operatingData = (data, tableData) => {
         },
       }
     }
+    if (isAccounts.value) {
+      return {
+        title: item.title,
+        render(row, index) {
+          return h(
+            NButton,
+            {
+              ghost: true,
+              showButton: false,
+              focusable: false,
+              // style: item.key == 'remark' ? 'width: auto' : 'width: 100px',
+              type: row[`${item.key}Status`] ? 'error' : '',
+            },
+            row[item.key]
+            // row[item.key]?row[item.key]:'--'
+          )
+        },
+      }
+    }
+
     return {
       title: item.title,
       render(row, index) {
@@ -194,8 +214,8 @@ const operatingData = (data, tableData) => {
           showButton: false,
           value: row[item.key],
           style: item.key == 'remark' ? 'width: auto' : 'width: 100px',
-          // disabled: !userStore.isAccounts,
-          status: row[`${item.key}Status`] ? 'warning' : 'success',
+          // disabled: !isAccounts.value,
+          status: row[`${item.key}Status`] ? 'error' : 'success',
           onUpdateValue: (v) => {
             tableData[index][item.key] = v
             tableData[index][`${item.key}Status`] = true
@@ -249,7 +269,7 @@ const stateParameterObj = () => {
 const handleSave = async () => {
   let parame = {
     dataDate: dayjs(timestamp.value).format('YYYY-MM'),
-    createName: '张大大',
+    createName: '陈洁',
     afterJson: JSON.stringify(stateParameterObj()),
   }
   // console.log(parame)
@@ -266,7 +286,7 @@ const handleCreate = async () => {
   // if (!state.isCheck) return $message.warning('请先保存草稿！')
   let parame = {
     dataDate: dayjs(timestamp.value).format('YYYY-MM'),
-    createName: '张大大',
+    createName: '陈洁',
     afterJson: JSON.stringify(stateParameterObj()),
   }
   // console.log(parame)
