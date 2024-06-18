@@ -1,6 +1,6 @@
 <template>
   <n-layout has-sider h-full>
-    <n-layout-sider
+    <!-- <n-layout-sider
       bordered
       collapse-mode="width"
       :collapsed-width="64"
@@ -9,18 +9,18 @@
       :collapsed="appStore.collapsed"
     >
       <SideBar />
-    </n-layout-sider>
+    </n-layout-sider> -->
     <n-layout>
-      <n-layout-header bg-white border-b bc-eee :style="`height: ${useTheme.header.height ?? 60}px`">
+      <!-- <n-layout-header bg-white border-b bc-eee :style="`height: ${useTheme.header.height ?? 60}px`">
         <AppHeader />
-      </n-layout-header>
+      </n-layout-header> -->
 
-      <n-layout bg="#f5f6fb" :style="`height: calc(100% - ${useTheme.header.height ?? 60}px)`">
-        <AppTags v-if="useTheme.tags.visible" />
+      <n-layout bg="#f5f6fb" :style="`height: calc(100% - 0px)`">
+        <!-- <AppTags v-if="useTheme.tags.visible" /> -->
         <AppMain
           class="cur-scroll border-t bc-eee"
           :style="{
-            height: `calc(100% - ${useTheme.tags.visible ? useTheme.tags.height ?? 50 : 0}px)`,
+            height: `calc(100% - ${ 0}px)`,
             overflow: 'auto',
           }"
         />
